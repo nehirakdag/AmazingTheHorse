@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
+using Random = UnityEngine.Random;
 
 namespace UnityStandardAssets.Characters.FirstPerson
 {
@@ -89,6 +90,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private Vector3 m_GroundContactNormal;
         private bool m_Jump, m_PreviouslyGrounded, m_Jumping, m_IsGrounded;
 
+		public AudioClip[] clips = new AudioClip[4];
+		private AudioSource audioSource;
 
         public Vector3 Velocity
         {
@@ -123,6 +126,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
             m_RigidBody = GetComponent<Rigidbody>();
             m_Capsule = GetComponent<CapsuleCollider>();
             mouseLook.Init (transform, cam.transform);
+			audioSource = GetComponent<AudioSource> ();
+			audioSource.volume = 0.7f;
         }
 
 
@@ -130,10 +135,10 @@ namespace UnityStandardAssets.Characters.FirstPerson
         {
             RotateView();
 
-            if (CrossPlatformInputManager.GetButtonDown("Jump") && !m_Jump)
+            /*if (CrossPlatformInputManager.GetButtonDown("Jump") && !m_Jump)
             {
                 m_Jump = true;
-            }
+            }*/
         }
 
 
@@ -156,6 +161,12 @@ namespace UnityStandardAssets.Characters.FirstPerson
                 {
                     m_RigidBody.AddForce(desiredMove*SlopeMultiplier(), ForceMode.Impulse);
                 }
+
+				if (!audioSource.isPlaying) {
+					int randomNum = Random.Range (0, clips.Length);
+					audioSource.clip = clips [randomNum];
+					audioSource.Play ();
+				}
             }
 
             if (m_IsGrounded)

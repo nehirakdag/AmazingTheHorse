@@ -9,6 +9,8 @@ public class Maze : MonoBehaviour {
 	public GameObject cellPrefab;
 	public GameObject caveDoorPrefab;
 
+	public bool builtMazeSuccessfully = false;
+
 	public DustStormFollower dustStorm;
 
 	public GameObject playerPrefab;
@@ -46,6 +48,9 @@ public class Maze : MonoBehaviour {
 	private List<Wall> unicursalWalls = new List<Wall>();
 
 	public List<Vector3> destroyedAlcoves = new List<Vector3>();
+	public List<Vector3> alcoveTileLocations = new List<Vector3> ();
+	public Vector3 boulderSpawnerLocation;
+	public bool rotateSpawner90Degrees = false;
 
 	// Use this for initialization
 	void Start () {
@@ -118,8 +123,11 @@ public class Maze : MonoBehaviour {
 		CreateAlcoves();
 
 		if (alcovesLeftToBuild != 0) {
+			Debug.Log ("Dumping maze! Will recreate it!");
 			DumpMaze ();
-			yield return StartCoroutine(GenerateMaze ());
+			//yield return StartCoroutine(GenerateMaze ());
+		} else {
+			builtMazeSuccessfully = true;
 		}
 
 		yield return null;
@@ -314,6 +322,7 @@ public class Maze : MonoBehaviour {
 
 	void CreateMaze() {
 		while (visitedCellNum < totalCellNum) {
+
 			if (startedMazeCreation) {
 				GetNeighbors ();
 
@@ -326,6 +335,16 @@ public class Maze : MonoBehaviour {
 					} else {
 						movements.Add (currentCell, currentNeighbor);
 						//Debug.Log ("Had key for cell neighbor combo: Current = " + currentCell + " , Neighbor = " + currentNeighbor);
+					}
+
+					if (visitedCellNum == 2) {
+						boulderSpawnerLocation = (cells[currentCell].transform.position + cells[currentNeighbor].transform.position) / 2.0f;
+
+						Vector3 difference = cells [currentCell].transform.position - cells [currentNeighbor].transform.position;
+
+						if (difference.x != 0) {
+							rotateSpawner90Degrees = true;
+						}
 					}
 
 					BreakWall();
@@ -366,6 +385,8 @@ public class Maze : MonoBehaviour {
 				connectingWall.connectingWalls.Remove (wallToDestroy);
 			}
 
+			cells [currentCell].north.GetComponent<Collider> ().enabled = false;
+
 			Destroy (cells [currentCell].north.gameObject);
 			break;
 		case 2:
@@ -375,6 +396,8 @@ public class Maze : MonoBehaviour {
 			foreach (Wall connectingWall in wallToDestroy.connectingWalls) {
 				connectingWall.connectingWalls.Remove (wallToDestroy);
 			}
+
+			cells [currentCell].east.GetComponent<Collider> ().enabled = false;
 
 			Destroy (cells [currentCell].east.gameObject);
 			break;
@@ -386,6 +409,8 @@ public class Maze : MonoBehaviour {
 				connectingWall.connectingWalls.Remove (wallToDestroy);
 			}
 
+			cells [currentCell].west.GetComponent<Collider> ().enabled = false;
+
 			Destroy (cells [currentCell].west.gameObject);
 			break;
 		case 4:
@@ -395,6 +420,8 @@ public class Maze : MonoBehaviour {
 			foreach (Wall connectingWall in wallToDestroy.connectingWalls) {
 				connectingWall.connectingWalls.Remove (wallToDestroy);
 			}
+
+			cells [currentCell].south.GetComponent<Collider> ().enabled = false;
 
 			Destroy (cells [currentCell].south.gameObject);
 			break;
@@ -523,17 +550,16 @@ public class Maze : MonoBehaviour {
 		alcovesLeftToBuild = numAlcoves;
 
 		foreach (Cell cell in cells) {
-			//Debug.Log ("Cell# " + cell.id + " has NumSurroundingWalls() = " + cell.NumSurroundingWalls ());
-			//Debug.Log ("Counter = " + counter);
-
 			if (cell.NumSurroundingWalls() == 3 && alcovesLeftToBuild > 0 && cell.id != 0) {
 				if (cell.unicursalWalls.Count == 1) {
-					//Debug.Log ("Destroyed " + cell.unicursalWalls [0].name);
 					Vector3 orientationDirection = (cell.unicursalWalls [0].cells [0].transform.position - cell.unicursalWalls [0].cells [1].transform.position) / 2.0f;
 					orientationDirection = orientationDirection.normalized;
-					//Debug.Log ("Orientation direction is: " + orientationDirection);
+
+					//alcoveTileLocations.Add (cell.unicursalWalls[0].transform.position);
+					FindAlcoveTileLocations(cell.unicursalWalls[0].transform.position, orientationDirection);
 
 					destroyedAlcoves.Add(cell.unicursalWalls[0].transform.position + orientationDirection * -15.0f);
+					cell.unicursalWalls [0].GetComponent<Collider> ().enabled = false;
 					Destroy (cell.unicursalWalls [0].gameObject);
 					alcovesLeftToBuild--;
 				}
@@ -549,21 +575,21 @@ public class Maze : MonoBehaviour {
 								
 								Wall wallToDestroy = cell.GetCommonWall (neighbor);
 								if (wallToDestroy != null && wallToDestroy.connectingWalls.Count == 1) {
-									Debug.Log ("Destroyed " + wallToDestroy.name);
 									Vector3 orientationDirection = wallToDestroy.transform.position - wallToDestroy.connectingWalls [0].transform.position;
+
+									if (wallToDestroy.transform.rotation.y != 0) {
+										orientationDirection.z = 0;
+									} else {
+										orientationDirection.x = 0;
+									}
+
 									orientationDirection = orientationDirection.normalized;
 
-									/*if (wallToDestroy.transform.position.x > wallToDestroy.connectingWalls [0].transform.position.x) {
-										orientationDirection = new Vector3 (1.0f, 0.0f, 0.0f);
-									}
-									if (wallToDestroy.transform.position.x < wallToDestroy.connectingWalls [0].transform.position.x) {
-										orientationDirection = new Vector3 (-1.0f, 0.0f, 0.0f);
-									}*/
-
-									Debug.Log ("Orientation direction is: " + orientationDirection);
+									FindAlcoveTileLocations (wallToDestroy.transform.position, -orientationDirection);
 
 									destroyedAlcoves.Add(wallToDestroy.transform.position + orientationDirection * 15.0f);
 									//wallToDestroy.connectingWalls[0].connectingWalls.Remove(wallToDestroy);
+									wallToDestroy.GetComponent<Collider> ().enabled = false;
 									Destroy (wallToDestroy.gameObject);
 									alcovesLeftToBuild--;
 								}
@@ -573,6 +599,22 @@ public class Maze : MonoBehaviour {
 				}
 			}
 		}
+	}
+
+	void FindAlcoveTileLocations(Vector3 wallToDestroyLocation, Vector3 orientation) {
+		Vector3 perpendicular;
+
+		if (orientation.x == 0.0f) {
+			perpendicular = new Vector3 (1.0f, 0.0f, 0.0f);
+		} else {
+			perpendicular = new Vector3 (0.0f, 0.0f, 1.0f);
+		}
+
+		alcoveTileLocations.Add (wallToDestroyLocation + orientation * -5.0f + perpendicular * 2.0f + new Vector3(0.0f, 2.0f, 0.0f));
+		alcoveTileLocations.Add (wallToDestroyLocation + orientation * -5.0f + perpendicular * -2.0f + new Vector3(0.0f, 2.0f, 0.0f));
+
+		alcoveTileLocations.Add (wallToDestroyLocation + orientation * -15.0f + perpendicular * 2.0f + new Vector3(0.0f, 2.0f, 0.0f));
+		alcoveTileLocations.Add (wallToDestroyLocation + orientation * -15.0f + perpendicular * -2.0f + new Vector3(0.0f, 2.0f, 0.0f));
 	}
 
 }

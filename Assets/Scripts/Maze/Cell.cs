@@ -17,6 +17,7 @@ public class Cell : MonoBehaviour {
 	public List<Cell> neighbors = new List<Cell> ();
 	public List<Wall> normalWalls = new List<Wall>();
 	public List<Wall> unicursalWalls = new List<Wall>();
+	public List<TraversableCell> childCells = new List<TraversableCell>();
 
 	public int NumSurroundingWalls() {
 		int numWalls = 4;
