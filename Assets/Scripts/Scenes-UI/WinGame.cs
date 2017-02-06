@@ -36,5 +36,6 @@ public class WinGame : MonoBehaviour {
 
 	void PressEndGame() {
 		Debug.Log ("GAME OVER!");
+		Application.Quit ();
 	}
 }

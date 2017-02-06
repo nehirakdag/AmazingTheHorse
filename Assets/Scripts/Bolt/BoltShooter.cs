@@ -10,6 +10,10 @@ public class BoltShooter : MonoBehaviour {
 
 	public Bolt shotFired;
 
+	void Start() {
+		this.transform.Translate (new Vector3 (0.0f, 0.0f, 3.0f));
+	}
+
 	// Update is called once per frame
 	void Update () {
 		if (Input.GetKeyDown (KeyCode.Space) && !isAlreadyInFlight) {
