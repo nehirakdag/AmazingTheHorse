@@ -9,7 +9,7 @@ Includes a procedurally generated unicursal maze that is randomized at each inst
 
 
 # Procedurally Generated Unicursal Maze
-Procedural generation allows mazes of arbitrary size to be created. Depth-First Search is used to create a perfect maze, then walls are placed at each passage to make the maze unicursal. Each maze contains three alcoves that have mysterious keys. The player must pick up all three keys to be able to escape the underground passage.
+Procedural generation allows mazes of arbitrary size to be created. Depth-First Search is used to create a perfect maze, then walls are placed at each passage to make the maze unicursal. Each maze contains three alcoves each with mysterious keys. The player must pick up all three keys to be able to escape the underground passage.
 
 ### Random Maze 1
 ![alt text](https://github.com/nehirakdag/LookAtMyHorse/blob/master/Images/maze1.png)
