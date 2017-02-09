@@ -16,7 +16,7 @@ Includes a procedurally generated unicursal maze that is randomized at each inst
 ![alt text](https://github.com/nehirakdag/LookAtMyHorse/blob/master/Images/maze2.png)
 
 ### Random Maze 3
-![alt text](https://github.com/nehirakdag/LookAtMyHorse/blob/master/Images/amazing2.png)
+![alt text](https://github.com/nehirakdag/LookAtMyHorse/blob/master/Images/maze3.png)
 
 
 # In-Game
@@ -33,6 +33,11 @@ Exit keys:
 
 ![alt text](https://github.com/nehirakdag/LookAtMyHorse/blob/master/Images/amazing4.png)
 
-Exit Portal:
+Exit portal:
 
 ![alt text](https://github.com/nehirakdag/LookAtMyHorse/blob/master/Images/amazing7.png)
+
+Other side of the ravine:
+
+![alt text](https://github.com/nehirakdag/LookAtMyHorse/blob/master/Images/amazing6.png)
+
