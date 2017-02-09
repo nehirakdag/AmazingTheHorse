@@ -9,6 +9,8 @@ Includes a procedurally generated unicursal maze that is randomized at each inst
 
 
 # Procedurally Generated Unicursal Maze
+Depth-First Search is used to create a perfect maze, then walls are placed at each passage to make the maze unicursal. 
+
 ### Random Maze 1
 ![alt text](https://github.com/nehirakdag/LookAtMyHorse/blob/master/Images/maze1.png)
 
