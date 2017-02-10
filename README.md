@@ -3,6 +3,8 @@ Amazing The Horse is a 3D game built in Unity. Amazing the horse finds himself i
 
 ![alt text](https://github.com/nehirakdag/AmazingTheHorse/blob/master/Images/amazing2.png)
 
+![alt text](https://github.com/nehirakdag/AmazingTheHorse/blob/master/Images/mazelarge3.png)
+
 
 # Implementation
 Includes a procedurally generated unicursal maze that is randomized at each instance, as well as AI Pathfinding boulders chasing the player through the maze. Projectile collision physics and item pickup triggering exit portal unlock included in the game.
@@ -18,6 +20,9 @@ Procedural generation allows mazes of arbitrary size to be created. Depth-First 
 ![alt text](https://github.com/nehirakdag/AmazingTheHorse/blob/master/Images/maze2.png)
 
 ### Random Maze 3
+![alt text](https://github.com/nehirakdag/AmazingTheHorse/blob/master/Images/mazelarge2.png)
+
+### Random Maze 4
 ![alt text](https://github.com/nehirakdag/AmazingTheHorse/blob/master/Images/maze3.png)
 
 
